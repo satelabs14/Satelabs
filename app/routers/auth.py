@@ -1,78 +1,54 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
-
-from app.database import SessionLocal
 from app import models, schemas
-from app.utils import hash_password, verify_password
+from app.utils import hash_password, verify_password, create_access_token
+from app.dependencies import get_db, get_current_user
 
-router = APIRouter(
-    prefix="/auth",
-    tags=["Authentication"]
-)
+router = APIRouter(prefix="/auth", tags=["Authentication"])
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
-@router.post("/register")
-def register(
-    user: schemas.UserCreate,
-    db: Session = Depends(get_db)
-):
+# ── Register ──────────────────────────────────────────────────────────────────
+@router.post("/register", response_model=schemas.UserOut, status_code=status.HTTP_201_CREATED)
+def register(user: schemas.UserCreate, db: Session = Depends(get_db)):
+    if db.query(models.User).filter(models.User.username == user.username).first():
+        raise HTTPException(status_code=400, detail="Username already registered")
 
-    existing_user = db.query(models.User).filter(
-        models.User.username == user.username
-    ).first()
-
-    if existing_user:
-        raise HTTPException(
-            status_code=400,
-            detail="Username already exists"
-        )
+    if db.query(models.User).filter(models.User.email == user.email).first():
+        raise HTTPException(status_code=400, detail="Email already registered")
 
     new_user = models.User(
         username=user.username,
         email=user.email,
-        password=hash_password(user.password)
+        password=hash_password(user.password),
+        role="user",                           # always "user" on self-register
     )
-
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
+    return new_user
 
-    return {
-        "message": "User registered successfully",
-        "id": new_user.id
-    }
 
-@router.post("/login")
+# ── Login ─────────────────────────────────────────────────────────────────────
+@router.post("/login", response_model=schemas.Token)
 def login(
-    user: schemas.UserLogin,
-    db: Session = Depends(get_db)
+    form_data: OAuth2PasswordRequestForm = Depends(),
+    db: Session = Depends(get_db),
 ):
+    db_user = db.query(models.User).filter(models.User.username == form_data.username).first()
 
-    db_user = db.query(models.User).filter(
-        models.User.username == user.username
-    ).first()
-
-    if not db_user:
+    if not db_user or not verify_password(form_data.password, db_user.password):
         raise HTTPException(
-            status_code=401,
-            detail="Invalid username or password"
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid username or password",
+            headers={"WWW-Authenticate": "Bearer"},
         )
 
-    if not verify_password(
-        user.password,
-        db_user.password
-    ):
-        raise HTTPException(
-            status_code=401,
-            detail="Invalid username or password"
-        )
+    access_token = create_access_token(data={"sub": db_user.username})
+    return {"access_token": access_token, "token_type": "bearer"}
 
-    return {
-        "message": "Login successful"
-    }
+
+# ── Protected: current user ───────────────────────────────────────────────────
+@router.get("/me", response_model=schemas.UserOut)
+def get_me(current_user: models.User = Depends(get_current_user)):
+    return current_user

@@ -1,19 +1,28 @@
 from fastapi import FastAPI
-from app.database import Base, engine
-from app.routers.auth import router as auth_router
+from app.routers import auth, admin
+from app.routers import dashboard
+from app.routers.courses import router as courses_router
+from app.routers import labs
 
-Base.metadata.create_all(bind=engine)
+
+
 
 app = FastAPI(
-    title="SateLabs",
-    description="Cyber Security Learning Platform",
-    version="1.0.0"
+    title="Satelabs - Cyber Security Learning Platform",
+    description="API for learning and practicing cybersecurity skills",
+    version="1.0.0",
 )
 
-app.include_router(auth_router)
+app.include_router(auth.router)
+app.include_router(admin.router)
+app.include_router(dashboard.router)
+app.include_router(courses_router)
+app.include_router(
+    labs.router,
+    prefix="/labs",
+    tags=["Labs"]
+)
 
 @app.get("/")
-def home():
-    return {
-        "message": "Welcome to SateLabs 🚀"
-    }
+def root():
+    return {"message": "Welcome to Satelabs 🛡️"}
