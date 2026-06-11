@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # SateLabs
 
 Cyber Security Learning Platform
@@ -78,3 +79,7 @@ This project is licensed under the MIT License.
 ## Contact
 
 For more information, visit SateLabs.
+=======
+# Satelabs
+Cyber Security Learning Platform
+>>>>>>> 81eef23f6ae8ccf974d9b02d89580af4be95f59c
