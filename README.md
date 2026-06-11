@@ -1,85 +1,150 @@
-<<<<<<< HEAD
-# SateLabs
+# 🚀 Satelabs
 
-Cyber Security Learning Platform
+**Learn. Practice. Secure.**
 
-## Overview
+Satelabs is a Cyber Security Learning Platform built using FastAPI and PostgreSQL. The platform helps users learn cyber security concepts, complete hands-on labs, track progress, and earn points.
 
-SateLabs is a FastAPI-based web application designed to provide a platform for learning and practicing cybersecurity concepts.
+---
 
 ## Features
 
-- 🚀 Built with FastAPI
-- 📚 Interactive learning modules
-- 🔒 Security-focused curriculum
+### Authentication
 
-## Getting Started
+* User Registration
+* User Login
+* JWT Authentication
+* Protected Routes
 
-### Prerequisites
+### User Dashboard
 
-- Python 3.8 or higher
-- pip
+* Profile Information
+* Courses Completed
+* Labs Completed
+* Points Tracking
 
-### Installation
+### Admin Features
 
-1. Clone the repository:
-```bash
-git clone https://github.com/yourusername/satelabs.git
-cd satelabs
+* Role-Based Access Control
+* Admin User Management
+
+### Courses
+
+* Create Courses
+* View Courses
+* Course Completion Tracking
+
+### Labs
+
+* Create Labs
+* View Labs
+* Lab Completion Tracking
+
+### Gamification
+
+* Points System
+* Progress Tracking
+
+---
+
+## Technology Stack
+
+### Backend
+
+* FastAPI
+* SQLAlchemy
+* PostgreSQL
+* JWT Authentication
+* Passlib (bcrypt)
+
+### Development Tools
+
+* Python
+* Uvicorn
+* Git
+* GitHub
+
+---
+
+## Project Structure
+
+```text
+Satelabs/
+│
+├── app/
+│   ├── routers/
+│   │   ├── auth.py
+│   │   ├── admin.py
+│   │   ├── dashboard.py
+│   │   ├── courses.py
+│   │   └── labs.py
+│   │
+│   ├── database.py
+│   ├── dependencies.py
+│   ├── models.py
+│   ├── schemas.py
+│   ├── utils.py
+│   └── main.py
+│
+├── .env
+├── requirements.txt
+└── README.md
 ```
 
-2. Create a virtual environment:
-```bash
-python -m venv .venv
-```
+---
 
-3. Activate the virtual environment:
-- **Windows:**
-  ```bash
-  .venv\Scripts\activate
-  ```
-- **macOS/Linux:**
-  ```bash
-  source .venv/bin/activate
-  ```
+## Current Progress
 
-4. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
+### Completed
 
-### Running the Application
+* Authentication System
+* JWT Authorization
+* Dashboard API
+* Admin Module
+* Courses Module
+* Labs Module
+* Points System
+* Progress Tracking
+
+### Upcoming Features
+
+* Leaderboard
+* Quiz System
+* Certificates
+* CTF Challenges
+* React Frontend
+* OWASP Top 10 Learning Path
+* Security Labs
+* User Achievements
+
+---
+
+## API Documentation
+
+After starting the server:
 
 ```bash
 uvicorn app.main:app --reload
 ```
 
-The API will be available at `http://localhost:8000`
+Swagger UI:
 
-### API Documentation
-
-- **Swagger UI:** http://localhost:8000/docs
-- **ReDoc:** http://localhost:8000/redoc
-
-## Project Structure
-
-```
-satelabs/
-├── app/
-│   └── main.py          # Main application entry point
-├── requirements.txt     # Python dependencies
-├── README.md           # This file
-└── .gitignore          # Git ignore rules
+```text
+http://127.0.0.1:8000/docs
 ```
 
-## License
+---
 
-This project is licensed under the MIT License.
+## Vision
 
-## Contact
+Satelabs aims to become a practical cyber security learning platform where users can:
 
-For more information, visit SateLabs.
-=======
-# Satelabs
-Cyber Security Learning Platform
->>>>>>> 81eef23f6ae8ccf974d9b02d89580af4be95f59c
+* Learn cyber security concepts
+* Practice through hands-on labs
+* Complete quizzes
+* Earn certificates
+* Participate in Capture The Flag (CTF) challenges
+* Build real-world security skills
+
+---
+
+Built with ❤️ by Sateesh
