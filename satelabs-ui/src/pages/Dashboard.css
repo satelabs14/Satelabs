@@ -1,0 +1,429 @@
+.dashboard-page {
+  min-height: 100vh;
+  padding: 2rem 1rem;
+  background: linear-gradient(135deg, #0f0f1e 0%, #1a0a2e 100%);
+  color: #e0e0e0;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.page-eyebrow {
+  font-size: 0.85rem;
+  color: #00d4ff;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-family: 'Monaco', 'Courier New', monospace;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+}
+
+.page-title {
+  font-size: 3rem;
+  font-weight: 700;
+  background: linear-gradient(45deg, #00d4ff, #fb923c);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.5rem;
+}
+
+.page-subtitle {
+  font-size: 1rem;
+  color: #a0a0a0;
+  letter-spacing: 0.05em;
+}
+
+/* XP Banner */
+.xp-banner {
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(251, 146, 60, 0.1));
+  border: 2px solid;
+  border-image: linear-gradient(45deg, #00d4ff, #fb923c) 1;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+}
+
+.xp-section {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.xp-circle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: conic-gradient(
+    #fb923c 0deg,
+    #fb923c 180deg,
+    rgba(0, 212, 255, 0.2) 180deg
+  );
+  padding: 3px;
+  position: relative;
+}
+
+.xp-circle::after {
+  content: '';
+  position: absolute;
+  width: 114px;
+  height: 114px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0f0f1e, #1a0a2e);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.xp-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #fb923c;
+  font-family: 'Monaco', 'Courier New', monospace;
+  z-index: 1;
+  position: relative;
+}
+
+.xp-label {
+  font-size: 0.75rem;
+  color: #a0a0a0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  z-index: 1;
+  position: relative;
+}
+
+.xp-info h3 {
+  font-size: 1.5rem;
+  color: #00d4ff;
+  margin: 0 0 0.5rem;
+  font-weight: 700;
+}
+
+.xp-info p {
+  color: #a0a0a0;
+  margin: 0;
+}
+
+/* Stats Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.stat-card {
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.05), rgba(251, 146, 60, 0.05));
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  border-radius: 8px;
+  padding: 1.5rem;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+  border-color: rgba(0, 212, 255, 0.5);
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(251, 146, 60, 0.08));
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #fb923c;
+  font-family: 'Monaco', 'Courier New', monospace;
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: #a0a0a0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Rank Progression */
+.rank-progression {
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.05), rgba(251, 146, 60, 0.05));
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.rank-progression h3 {
+  color: #00d4ff;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 1rem;
+}
+
+.rank-bars {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.5rem;
+}
+
+.rank-bar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0.4;
+  transition: all 0.3s ease;
+}
+
+.rank-bar.achieved {
+  opacity: 1;
+}
+
+.rank-bar-visual {
+  width: 100%;
+  height: 6px;
+  background: rgba(0, 212, 255, 0.2);
+  border-radius: 3px;
+  position: relative;
+}
+
+.rank-bar.achieved .rank-bar-visual {
+  background: linear-gradient(90deg, #00d4ff, #fb923c);
+  box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+}
+
+.rank-bar-label {
+  font-size: 0.75rem;
+  text-align: center;
+  color: #a0a0a0;
+}
+
+.rank-bar.achieved .rank-bar-label {
+  color: #00d4ff;
+  font-weight: 600;
+}
+
+/* Learning Summary */
+.learning-summary {
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.05), rgba(251, 146, 60, 0.05));
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.summary-item h4 {
+  color: #00d4ff;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+
+.summary-stat {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #fb923c;
+  font-family: 'Monaco', 'Courier New', monospace;
+}
+
+/* Active Courses */
+.active-courses {
+  margin-bottom: 3rem;
+}
+
+.section-title {
+  font-size: 1.25rem;
+  color: #00d4ff;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 1.5rem;
+  text-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+}
+
+.courses-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.course-card {
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.05), rgba(251, 146, 60, 0.05));
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  border-radius: 8px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.course-card:hover {
+  border-color: rgba(0, 212, 255, 0.5);
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(251, 146, 60, 0.08));
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(0, 212, 255, 0.2);
+}
+
+.course-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.course-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+}
+
+.course-xp {
+  background: rgba(251, 146, 60, 0.2);
+  color: #fb923c;
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: 'Monaco', 'Courier New', monospace;
+}
+
+.course-progress {
+  margin-bottom: 1rem;
+}
+
+.progress-label {
+  font-size: 0.85rem;
+  color: #a0a0a0;
+  margin-bottom: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 6px;
+  background: rgba(0, 212, 255, 0.1);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #00d4ff, #fb923c);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+  box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+}
+
+.course-button {
+  background: linear-gradient(135deg, #00d4ff, #fb923c);
+  color: #0f0f1e;
+  border: none;
+  border-radius: 6px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: auto;
+}
+
+.course-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 25px rgba(0, 212, 255, 0.3);
+}
+
+/* Quick Actions */
+.quick-actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.action-button {
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(251, 146, 60, 0.08));
+  border: 1px solid rgba(0, 212, 255, 0.3);
+  color: #00d4ff;
+  padding: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+}
+
+.action-button:hover {
+  border-color: rgba(0, 212, 255, 0.7);
+  background: rgba(0, 212, 255, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 212, 255, 0.2);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .xp-banner {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .rank-bars {
+    grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+  }
+
+  .courses-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-title {
+    font-size: 2rem;
+  }
+
+  .xp-circle {
+    width: 100px;
+    height: 100px;
+  }
+
+  .xp-circle::after {
+    width: 94px;
+    height: 94px;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .stat-value {
+    font-size: 1.5rem;
+  }
+}
+
+.mono {
+  font-family: 'Monaco', 'Courier New', monospace;
+}

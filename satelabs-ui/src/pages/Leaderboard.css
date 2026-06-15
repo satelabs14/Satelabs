@@ -1,0 +1,385 @@
+.leaderboard-page {
+  min-height: 100vh;
+  padding: 2rem 1rem;
+  background: linear-gradient(135deg, #0f0f1e 0%, #1a0a2e 100%);
+  color: #e0e0e0;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  position: relative;
+  z-index: 10;
+}
+
+.page-eyebrow {
+  font-size: 0.85rem;
+  color: #00d4ff;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-family: 'Monaco', 'Courier New', monospace;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+}
+
+.page-title {
+  font-size: 3rem;
+  font-weight: 700;
+  background: linear-gradient(45deg, #00d4ff, #fb923c);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.5rem;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.page-subtitle {
+  font-size: 1rem;
+  color: #a0a0a0;
+  letter-spacing: 0.05em;
+}
+
+/* Top Players Section */
+.top-players {
+  margin-bottom: 3rem;
+  position: relative;
+}
+
+.section-title {
+  font-size: 1.25rem;
+  color: #00d4ff;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 1.5rem;
+  text-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+  font-family: 'Monaco', 'Courier New', monospace;
+}
+
+.podium {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.podium-place {
+  background: linear-gradient(180deg, rgba(15, 15, 30, 0.9), rgba(26, 10, 46, 0.8));
+  border: 2px solid;
+  border-radius: 8px;
+  padding: 1.5rem 1rem;
+  text-align: center;
+  position: relative;
+  flex: 1;
+  min-width: 120px;
+  transition: all 0.3s ease;
+}
+
+.podium-place:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+}
+
+.podium-place.first {
+  border-color: #fbbf24;
+  box-shadow: 0 0 30px rgba(251, 191, 36, 0.3);
+  min-height: 280px;
+  flex: 1.2;
+}
+
+.podium-place.second {
+  border-color: #c0c0c0;
+  box-shadow: 0 0 20px rgba(192, 192, 192, 0.2);
+  min-height: 240px;
+}
+
+.podium-place.third {
+  border-color: #cd7f32;
+  box-shadow: 0 0 20px rgba(205, 127, 50, 0.2);
+  min-height: 200px;
+}
+
+.podium-rank {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #00d4ff;
+  font-family: 'Monaco', 'Courier New', monospace;
+  margin-bottom: 0.5rem;
+}
+
+.podium-medal {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.podium-place h3 {
+  font-size: 1.2rem;
+  margin: 1rem 0 0.5rem;
+  color: #ffffff;
+  word-break: break-word;
+}
+
+.podium-xp {
+  color: #00d4ff;
+  font-weight: 600;
+  font-family: 'Monaco', 'Courier New', monospace;
+  margin: 0.5rem 0;
+}
+
+.rank-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: 1px solid;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 0.5rem;
+}
+
+/* Your Rank Section */
+.your-rank {
+  background: rgba(0, 212, 255, 0.05);
+  border: 2px solid rgba(0, 212, 255, 0.3);
+  border-radius: 8px;
+  padding: 2rem;
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+.your-rank-card {
+  background: linear-gradient(135deg, rgba(15, 15, 30, 0.9), rgba(26, 10, 46, 0.8));
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.your-rank-content {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 2rem;
+  align-items: center;
+}
+
+.your-rank-number {
+  font-size: 2.5rem;
+  color: #00d4ff;
+  font-weight: 700;
+  text-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+}
+
+.your-rank-info h3 {
+  font-size: 1.5rem;
+  color: #ffffff;
+  margin-bottom: 0.5rem;
+}
+
+.your-rank-xp {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.xp-value {
+  font-size: 1.75rem;
+  color: #fb923c;
+  font-weight: 700;
+}
+
+.xp-label {
+  font-size: 0.85rem;
+  color: #a0a0a0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Full Leaderboard */
+.full-leaderboard {
+  margin-bottom: 2rem;
+}
+
+.leaderboard-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.leaderboard-entry {
+  display: grid;
+  grid-template-columns: 60px 1fr 120px;
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem;
+  background: linear-gradient(90deg, rgba(0, 212, 255, 0.05), transparent);
+  border: 1px solid rgba(0, 212, 255, 0.1);
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.leaderboard-entry:hover {
+  background: linear-gradient(90deg, rgba(0, 212, 255, 0.1), rgba(251, 146, 60, 0.05));
+  border-color: rgba(0, 212, 255, 0.3);
+  transform: translateX(5px);
+}
+
+.leaderboard-entry.current-user {
+  border-color: rgba(0, 212, 255, 0.5);
+  background: linear-gradient(90deg, rgba(0, 212, 255, 0.15), rgba(251, 146, 60, 0.1));
+  box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
+}
+
+.entry-rank {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.rank-number {
+  font-size: 1.5rem;
+  color: #00d4ff;
+  font-weight: 700;
+}
+
+.rank-medal {
+  font-size: 1.5rem;
+}
+
+.entry-info {
+  min-width: 0;
+}
+
+.entry-username {
+  font-size: 1rem;
+  color: #ffffff;
+  margin: 0;
+  word-break: break-word;
+  margin-bottom: 0.25rem;
+}
+
+.entry-rank-badge {
+  margin: 0;
+}
+
+.entry-xp {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+/* Loading State */
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  font-size: 1.1rem;
+  color: #a0a0a0;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #a0a0a0;
+}
+
+.empty-state p {
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .page-title {
+    font-size: 2rem;
+  }
+
+  .podium {
+    gap: 0.5rem;
+  }
+
+  .podium-place {
+    padding: 1rem 0.75rem;
+    min-width: 100px;
+  }
+
+  .podium-rank {
+    font-size: 2rem;
+  }
+
+  .podium-medal {
+    font-size: 2rem;
+  }
+
+  .your-rank-content {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .leaderboard-entry {
+    grid-template-columns: 50px 1fr 90px;
+    gap: 0.75rem;
+    padding: 0.75rem;
+  }
+
+  .rank-number {
+    font-size: 1.2rem;
+  }
+
+  .rank-medal {
+    font-size: 1.2rem;
+  }
+
+  .entry-username {
+    font-size: 0.9rem;
+  }
+
+  .xp-value {
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-title {
+    font-size: 1.5rem;
+  }
+
+  .podium {
+    flex-wrap: wrap;
+  }
+
+  .podium-place {
+    min-height: auto;
+  }
+
+  .podium-place.first {
+    min-height: auto;
+  }
+
+  .podium-place.second {
+    min-height: auto;
+  }
+
+  .podium-place.third {
+    min-height: auto;
+  }
+
+  .leaderboard-entry {
+    grid-template-columns: 40px 1fr 70px;
+    gap: 0.5rem;
+    padding: 0.5rem;
+  }
+}
+
+.mono {
+  font-family: 'Monaco', 'Courier New', monospace;
+}

@@ -1,0 +1,213 @@
+.profile-page { 
+  min-height: 100vh;
+  padding: 24px;
+}
+
+.profile-grid {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.profile-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 18px;
+  padding: 28px 24px;
+  text-align: center;
+  position: sticky;
+  top: 24px;
+}
+
+.profile-avatar-large {
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent-primary), #0044cc);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--bg-void);
+  margin: 0 auto 16px;
+  box-shadow: 0 0 24px rgba(0, 212, 255, 0.3);
+}
+
+.profile-username {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.profile-email {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+
+.profile-bio {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.profile-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.profile-stat {
+  background: var(--bg-surface);
+  border-radius: 10px;
+  padding: 12px 8px;
+}
+
+.profile-stat-val {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.color-cyan { color: var(--accent-primary); }
+.color-amber { color: var(--accent-amber); font-size: 14px !important; }
+.color-green { color: var(--success); }
+.color-purple { color: #a855f7; }
+
+.profile-stat-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.member-since {
+  padding-top: 16px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+/* Right side */
+.profile-right {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.profile-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  padding: 26px;
+}
+
+.profile-section-title {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 80px;
+  font-family: var(--font-body);
+}
+
+.form-message {
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+.form-message.success {
+  background: var(--success-glow);
+  color: var(--success);
+  border: 1px solid rgba(0,230,118,0.3);
+}
+
+.form-message.error {
+  background: var(--danger-glow);
+  color: var(--danger);
+  border: 1px solid rgba(255,68,68,0.3);
+}
+
+.profile-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.profile-upload {
+  margin-top: 12px;
+  width: 100%;
+  color: white;
+  cursor: pointer;
+}
+
+.profile-avatar-large{
+  width:140px;
+  height:140px;
+  margin:0 auto 20px;
+  border-radius:50%;
+  overflow:hidden;
+  border:3px solid var(--accent-primary);
+  box-shadow:0 0 25px rgba(255,153,0,.35);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:58px;
+  font-weight:700;
+  background:linear-gradient(
+    135deg,
+    #ff9900,
+    #4361ee
+  );
+}
+
+.profile-upload-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:10px 18px;
+  border-radius:12px;
+  background:rgba(255,153,0,.12);
+  border:1px solid rgba(255,153,0,.4);
+  color:#ff9900;
+  font-weight:600;
+  cursor:pointer;
+  transition:.3s;
+  margin-bottom:16px;
+}
+
+.profile-upload-btn:hover{
+  background:#ff9900;
+  color:#000;
+  transform:translateY(-2px);
+}
+
+.profile-avatar-img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+@media (max-width: 800px) {
+  .profile-grid { grid-template-columns: 1fr; }
+  .profile-card { position: static; }
+}

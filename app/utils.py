@@ -3,6 +3,7 @@ from jose import JWTError, jwt
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
 import os
+import uuid
 
 load_dotenv()
 
@@ -43,3 +44,31 @@ def decode_access_token(token: str) -> dict | None:
         return payload
     except JWTError:
         return None
+
+
+# ── Rank calculation ──────────────────────────────────────────────────────────
+def calculate_rank(xp: int) -> str:
+    """
+    Calculate rank based on XP.
+    0–100 XP → Recruit
+    101–300 XP → Analyst
+    301–700 XP → Hunter
+    701–1500 XP → Specialist
+    1501+ XP → Elite
+    """
+    if xp < 101:
+        return "Recruit"
+    elif xp < 301:
+        return "Analyst"
+    elif xp < 701:
+        return "Hunter"
+    elif xp < 1501:
+        return "Specialist"
+    else:
+        return "Elite"
+
+
+# ── Certificate generation ────────────────────────────────────────────────────
+def generate_certificate_code() -> str:
+    """Generate a unique certificate code."""
+    return f"CERT-{uuid.uuid4().hex[:12].upper()}"

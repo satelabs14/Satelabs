@@ -1,0 +1,192 @@
+.labs-page {}
+
+.labs-progress-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.labs-progress-bar .progress-track { flex: 1; }
+
+.progress-fill-amber {
+  background: linear-gradient(90deg, var(--accent-amber), #ff6600) !important;
+  box-shadow: 0 0 8px rgba(255, 184, 0, 0.4) !important;
+}
+
+.labs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.lab-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.lab-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-default);
+}
+
+.lab-card.lab-done {
+  border-color: rgba(0, 230, 118, 0.2);
+  opacity: 0.85;
+}
+
+.lab-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.lab-badges { display: flex; gap: 6px; }
+
+.lab-type {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 5px;
+  letter-spacing: 0.05em;
+}
+
+.type-cyan { background: var(--accent-glow); color: var(--accent-primary); }
+.type-amber { background: var(--accent-amber-glow); color: var(--accent-amber); }
+.type-purple { background: rgba(168,85,247,0.1); color: #a855f7; }
+.type-green { background: var(--success-glow); color: var(--success); }
+.type-muted { background: var(--bg-surface); color: var(--text-muted); }
+
+.lab-diff {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 5px;
+}
+
+.lab-diff.easy { background: var(--success-glow); color: var(--success); }
+.lab-diff.medium { background: var(--accent-amber-glow); color: var(--accent-amber); }
+.lab-diff.hard { background: var(--danger-glow); color: var(--danger); }
+
+.lab-points {
+  font-size: 12px;
+  color: var(--accent-amber);
+}
+
+.lab-title {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.lab-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  flex: 1;
+}
+
+.lab-hints {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.hint-label { color: var(--accent-amber); }
+
+.lab-completed {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: var(--success-glow);
+  border: 1px solid rgba(0,230,118,0.3);
+  border-radius: 9px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--success);
+}
+
+.lab-actions { display: flex; flex-direction: column; gap: 8px; }
+
+.btn-flag-toggle {
+  padding: 9px 14px;
+  border-radius: 9px;
+  border: 1px solid var(--border-default);
+  background: transparent;
+  color: var(--accent-primary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: var(--font-body);
+}
+
+.btn-flag-toggle:hover { background: var(--accent-glow); }
+
+.flag-input-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.flag-input-row {
+  display: flex;
+  gap: 6px;
+}
+
+.flag-input {
+  flex: 1;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 9px 12px;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.flag-input:focus { border-color: var(--accent-primary); }
+.flag-input.flag-wrong { border-color: var(--danger); }
+.flag-input.flag-success { border-color: var(--success); }
+
+.btn-submit-flag {
+  padding: 9px 14px;
+  background: var(--accent-primary);
+  border: none;
+  border-radius: 8px;
+  color: var(--bg-void);
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.2s;
+  align-self: flex-start;
+}
+
+.btn-submit-flag:hover { background: #33ddff; }
+.btn-submit-flag:disabled { opacity: 0.5; }
+
+.flag-feedback {
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+
+.flag-feedback.wrong { background: var(--danger-glow); color: var(--danger); }
+.flag-feedback.error { background: var(--accent-amber-glow); color: var(--accent-amber); }
+
+.lab-skeleton {
+  height: 220px;
+  border-radius: 16px;
+  background: linear-gradient(90deg, var(--bg-card) 25%, var(--bg-elevated) 50%, var(--bg-card) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}

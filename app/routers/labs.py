@@ -1,12 +1,13 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app import models, schemas
-from app.dependencies import get_db
-from fastapi import HTTPException
-from app.dependencies import get_current_user
+from app.dependencies import get_db, get_current_user
 
-router = APIRouter()
+router = APIRouter(
+    prefix="/labs",
+    tags=["Labs"]
+)
 
 
 @router.get("/", response_model=list[schemas.LabOut])
@@ -23,7 +24,8 @@ def create_lab(
         title=lab.title,
         description=lab.description,
         difficulty=lab.difficulty,
-        points=lab.points
+        points=lab.points,
+        module_id=lab.module_id
     )
 
     db.add(new_lab)
@@ -38,9 +40,28 @@ def get_lab(
     lab_id: int,
     db: Session = Depends(get_db)
 ):
-    return db.query(models.Lab).filter(
+    lab = db.query(models.Lab).filter(
         models.Lab.id == lab_id
     ).first()
+
+    if not lab:
+        raise HTTPException(
+            status_code=404,
+            detail="Lab not found"
+        )
+
+    return lab
+
+
+@router.get("/module/{module_id}", response_model=list[schemas.LabOut])
+def get_labs_by_module(
+    module_id: int,
+    db: Session = Depends(get_db)
+):
+    return db.query(models.Lab).filter(
+        models.Lab.module_id == module_id
+    ).all()
+
 
 @router.post("/{lab_id}/complete")
 def complete_lab(
@@ -57,6 +78,27 @@ def complete_lab(
             status_code=404,
             detail="Lab not found"
         )
+
+    existing_progress = db.query(
+        models.LabProgress
+    ).filter(
+        models.LabProgress.user_id == current_user.id,
+        models.LabProgress.lab_id == lab_id
+    ).first()
+
+    if existing_progress:
+        raise HTTPException(
+            status_code=400,
+            detail="Lab already completed"
+        )
+
+    progress = models.LabProgress(
+        user_id=current_user.id,
+        lab_id=lab_id,
+        completed=True
+    )
+
+    db.add(progress)
 
     current_user.labs_completed += 1
     current_user.points += lab.points
