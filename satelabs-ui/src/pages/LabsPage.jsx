@@ -13,7 +13,11 @@ const LabCard = ({ lab, onComplete }) => {
     if (!flagInput.trim()) return;
     setSubmitting(true);
     try {
-      await axios.post(`${API_BASE}/labs/${lab.id}/complete`, { flag: flagInput });
+      await axios.post(`${API_BASE}/labs/${lab.id}/complete`, { flag: flagInput }, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('satelabs_token')}`
+        }
+      });
       setResult('success');
       onComplete(lab.id);
     } catch (err) {
@@ -93,7 +97,9 @@ export default function LabsPage() {
   const types = ['All', 'Web', 'Network', 'Forensics', 'Crypto', 'Misc'];
 
   useEffect(() => {
-    axios.get(`${API_BASE}/labs`).then(res => {
+    axios.get(`${API_BASE}/labs`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem('satelabs_token')}` }
+    }).then(res => {
       setLabs(res.data || []);
     }).finally(() => setLoading(false));
   }, []);

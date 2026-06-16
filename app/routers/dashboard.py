@@ -1,8 +1,10 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from sqlalchemy import desc
+from sqlalchemy import desc, func
+from typing import List
 from app.dependencies import get_current_user, get_db
 from app import models, schemas
+from app.utils import get_next_rank_details
 
 router = APIRouter(
     prefix="/dashboard",
@@ -17,12 +19,17 @@ def dashboard(current_user: models.User = Depends(get_current_user)):
     return {
         "username": current_user.username,
         "email": current_user.email,
-        "xp": current_user.xp,
         "rank": current_user.rank,
         "courses_completed": current_user.courses_completed,
         "labs_completed": current_user.labs_completed,
         "points": current_user.points
     }
+
+
+@router.get("")
+def dashboard_no_slash(current_user: models.User = Depends(get_current_user)):
+    """Get basic dashboard info without relying on redirect-slash behavior."""
+    return dashboard(current_user)
 
 
 # ── Dashboard stats ──────────────────────────────────────────────────────────
@@ -32,104 +39,66 @@ def get_dashboard_stats(
     current_user: models.User = Depends(get_current_user)
 ):
     """Get comprehensive dashboard statistics."""
-    
-    # Count completed modules
-    completed_modules = db.query(models.ModuleProgress).filter(
+
+    completed_modules_count = db.query(models.ModuleProgress).filter(
         models.ModuleProgress.user_id == current_user.id,
         models.ModuleProgress.completed == True
     ).count()
-    
-    # Get active courses (in progress)
-    active_courses_query = db.query(models.UserProgress).filter(
-        models.UserProgress.user_id == current_user.id,
-        models.UserProgress.completed == False,
-        models.UserProgress.progress_percentage > 0
-    ).all()
-    
-    active_courses = len(active_courses_query)
-    
-    # Get certificates
+
     certificates_count = db.query(models.Certificate).filter(
         models.Certificate.user_id == current_user.id
     ).count()
-    
-    # Get all courses with progress
-    all_courses = db.query(models.Course).all()
-    courses_with_progress = []
-    
-    for course in all_courses:
-        modules = db.query(models.Module).filter(models.Module.course_id == course.id).all()
-        total_modules = len(modules)
-        
-        if total_modules == 0:
-            continue
-        
-        completed = db.query(models.ModuleProgress).filter(
-            models.ModuleProgress.user_id == current_user.id,
-            models.ModuleProgress.module_id.in_([m.id for m in modules]),
-            models.ModuleProgress.completed == True
-        ).count()
-        
-        progress = (completed / total_modules * 100) if total_modules > 0 else 0
-        
-        module_list = []
-        for module in modules:
-            module_completed = db.query(models.ModuleProgress).filter(
-                models.ModuleProgress.user_id == current_user.id,
-                models.ModuleProgress.module_id == module.id,
-                models.ModuleProgress.completed == True
-            ).first()
-            
-            module_list.append(schemas.ModuleOut(
-                id=module.id,
-                course_id=module.course_id,
-                title=module.title,
-                content=module.content,
-                points=module.points,
-                completed=module_completed is not None
-            ))
-        
-        courses_with_progress.append(schemas.CourseWithProgress(
-            id=course.id,
-            title=course.title,
-            description=course.description,
-            points=course.points,
-            total_modules=total_modules,
-            completed_modules=completed,
-            progress_percentage=int(progress),
-            modules=module_list
-        ))
-    
+
+    certificate_course_count = db.query(models.Certificate.course_id).filter(
+        models.Certificate.user_id == current_user.id
+    ).distinct().count()
+
+    user_progress_records = db.query(models.UserProgress).filter(
+        models.UserProgress.user_id == current_user.id,
+    ).all()
+
+    completed_progress_courses = sum(1 for p in user_progress_records if p.completed or p.progress_percentage >= 100)
+    completed_courses = max(current_user.courses_completed or 0, completed_progress_courses, certificate_course_count)
+    active_courses = sum(1 for p in user_progress_records if not p.completed and p.progress_percentage > 0)
+    progress_percentages = [p.progress_percentage for p in user_progress_records if p.progress_percentage > 0]
+    overall_progress = sum(progress_percentages) // len(progress_percentages) if progress_percentages else 0
+    leaderboard_position = db.query(func.count(models.User.id)).filter(
+        models.User.points > current_user.points
+    ).scalar() + 1
+
     return schemas.DashboardStats(
-        current_xp=current_user.xp,
-        current_rank=current_user.rank,
-        completed_modules=completed_modules,
+        points=current_user.points,
+        rank=current_user.rank,
+        completed_modules=completed_modules_count,
         active_courses=active_courses,
-        completed_courses=current_user.courses_completed,
+        completed_courses=completed_courses,
         completed_labs=current_user.labs_completed,
         certificates_earned=certificates_count,
-        courses=courses_with_progress
+        leaderboard_position=leaderboard_position,
+        overall_progress=overall_progress,
+        courses=[] # Keep this endpoint fast; courses are fetched separately
     )
 
 
 # ── Leaderboard ──────────────────────────────────────────────────────────────
-@router.get("/leaderboard", response_model=list[schemas.LeaderboardEntry])
+@router.get("/leaderboard", response_model=List[schemas.LeaderboardEntry])
 def get_leaderboard(
     db: Session = Depends(get_db),
     limit: int = 100
 ):
-    """Get leaderboard sorted by XP."""
-    users = db.query(models.User).order_by(desc(models.User.xp)).limit(limit).all()
-    
+    """Get leaderboard sorted by points."""
+    users = db.query(models.User).order_by(desc(models.User.points)).limit(limit).all()
+
     result = []
     for idx, user in enumerate(users, 1):
         result.append(schemas.LeaderboardEntry(
             rank=idx,
             username=user.username,
-            xp=user.xp,
-            user_rank=user.rank
+            points=user.points,
+            user_rank=user.rank,
+            profile_image=user.profile_image
         ))
-    
+
     return result
 
 
@@ -138,3 +107,24 @@ def get_leaderboard(
 def profile(current_user: models.User = Depends(get_current_user)):
     """Get current user profile."""
     return current_user
+
+
+# ── Rank Progression ─────────────────────────────────────────────────────────
+@router.get("/rank-progress", response_model=schemas.RankProgressOut)
+def get_rank_progress(current_user: models.User = Depends(get_current_user)):
+    """Get user's rank progression details."""
+    return get_next_rank_details(current_user.points)
+
+
+# ── Activity Feed ────────────────────────────────────────────────────────────
+@router.get("/activity", response_model=List[schemas.ActivityOut])
+def get_activity_feed(
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),
+    limit: int = 15
+):
+    """Get recent user activity."""
+    activities = db.query(models.Activity).filter(
+        models.Activity.user_id == current_user.id
+    ).order_by(desc(models.Activity.timestamp)).limit(limit).all()
+    return activities

@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 
 from app import models, schemas
 from app.dependencies import get_current_user, require_admin, get_db
+from app.utils import calculate_rank
 
 router = APIRouter(
     prefix="/quiz",
@@ -22,6 +23,13 @@ def create_quiz(
     db.refresh(new_quiz)
 
     return new_quiz
+
+@router.get("", response_model=list[schemas.QuizOut])
+def get_all_quizzes(
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)
+):
+    return db.query(models.Quiz).all()
 
 @router.get("/{module_id}")
 def get_quizzes(
@@ -52,12 +60,14 @@ def submit_quiz(
         # Fetch fresh user instance from db context
         user = db.query(models.User).filter(models.User.id == current_user.id).first()
         user.points += quiz.points
+        user.rank = calculate_rank(user.points)
         db.commit()
         
         return {
             "correct": True, 
             "points_earned": quiz.points, 
-            "total_points": user.points
+            "total_points": user.points,
+            "new_rank": user.rank
         }
         
     return {

@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 
 from app import models, schemas
 from app.dependencies import get_current_user, require_admin, get_db
+from app.utils import calculate_rank
 
 router = APIRouter(
     prefix="/modules",
@@ -79,11 +80,13 @@ def complete_module(
     ).first()
 
     user.points += module.points
+    user.rank = calculate_rank(user.points)
 
     db.commit()
 
     return {
         "message": "Module completed",
         "points_earned": module.points,
-        "total_points": user.points
+        "total_points": user.points,
+        "new_rank": user.rank
     }

@@ -43,7 +43,7 @@ const LeaderboardEntry = ({ entry, isCurrentUser }) => (
     </div>
 
     <div className="entry-xp">
-      <span className="xp-value mono">{entry.xp}</span>
+      <span className="xp-value mono">{entry.points}</span>
       <span className="xp-label">XP</span>
     </div>
   </div>
@@ -107,7 +107,7 @@ export default function LeaderboardPage() {
                 <div className="podium-rank">2</div>
                 <div className="podium-medal">🥈</div>
                 <h3>{topPlayers[1].username}</h3>
-                <p className="podium-xp">{topPlayers[1].xp} XP</p>
+                <p className="podium-xp">{topPlayers[1].points} XP</p>
                 <RankBadge rank={topPlayers[1].user_rank} />
               </div>
             )}
@@ -117,7 +117,7 @@ export default function LeaderboardPage() {
                 <div className="podium-rank">1</div>
                 <div className="podium-medal">🥇</div>
                 <h3>{topPlayers[0].username}</h3>
-                <p className="podium-xp">{topPlayers[0].xp} XP</p>
+                <p className="podium-xp">{topPlayers[0].points} XP</p>
                 <RankBadge rank={topPlayers[0].user_rank} />
               </div>
             )}
@@ -127,7 +127,7 @@ export default function LeaderboardPage() {
                 <div className="podium-rank">3</div>
                 <div className="podium-medal">🥉</div>
                 <h3>{topPlayers[2].username}</h3>
-                <p className="podium-xp">{topPlayers[2].xp} XP</p>
+                <p className="podium-xp">{topPlayers[2].points} XP</p>
                 <RankBadge rank={topPlayers[2].user_rank} />
               </div>
             )}
@@ -147,7 +147,7 @@ export default function LeaderboardPage() {
                 <RankBadge rank={userRank.user_rank} />
               </div>
               <div className="your-rank-xp">
-                <span className="xp-value mono">{userRank.xp}</span>
+                <span className="xp-value mono">{userRank.points}</span>
                 <span className="xp-label">XP</span>
               </div>
             </div>

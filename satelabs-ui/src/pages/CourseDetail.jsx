@@ -70,7 +70,7 @@ export default function CourseDetail() {
             <p style={{ color: '#94a3b8', fontSize: '1.1rem', maxWidth: '600px' }}>{course.description}</p>
           </div>
           <div style={{ textAlign: 'right' }}>
-            <div style={{ color: '#06b6d4', fontSize: '2rem', fontWeight: 'bold' }}>{course.total_xp} XP</div>
+            <div style={{ color: '#06b6d4', fontSize: '2rem', fontWeight: 'bold' }}>{course.points} XP</div>
             {course.is_enrolled ? (
               <div style={{ marginTop: '1rem', background: 'rgba(16, 185, 129, 0.1)', color: '#10b981', padding: '0.5rem 1rem', borderRadius: '8px', border: '1px solid rgba(16, 185, 129, 0.3)', fontWeight: 'bold' }}>
                 ✓ Active Enrollment

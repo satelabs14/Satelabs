@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { API_BASE } from '../context/AuthContext';
+import { API_BASE } from '../../context/AuthContext';
 import './Certificates.css';
 
 export default function CertificatesPage() {
@@ -11,7 +11,9 @@ export default function CertificatesPage() {
   const [verifying, setVerifying] = useState(false);
 
   useEffect(() => {
-    axios.get(`${API_BASE}/certificates/my`).then(res => {
+    axios.get(`${API_BASE}/certificates/my`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem('satelabs_token')}` }
+    }).then(res => {
       setCerts(res.data || []);
     }).finally(() => setLoading(false));
   }, []);

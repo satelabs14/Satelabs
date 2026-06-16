@@ -26,6 +26,16 @@ def register(user: schemas.UserCreate, db: Session = Depends(get_db)):
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
+
+    # Activity Logging
+    activity = models.Activity(
+        user_id=new_user.id,
+        activity_type="USER_REGISTER",
+        message="Joined SateLabs"
+    )
+    db.add(activity)
+    db.commit()
+
     return new_user
 
 

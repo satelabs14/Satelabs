@@ -1,3 +1,4 @@
+from datetime import datetime
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, Text, DateTime
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
@@ -9,7 +10,7 @@ class Course(Base):
     title = Column(String, index=True)
     description = Column(Text)
     level = Column(String) # Beginner, Intermediate, Advanced
-    total_xp = Column(Integer, default=0)
+    points = Column(Integer, default=0)
     image_url = Column(String)
     
     modules = relationship("Module", back_populates="course", cascade="all, delete-orphan")
@@ -22,7 +23,7 @@ class Module(Base):
     title = Column(String)
     description = Column(Text)
     order = Column(Integer)
-    xp_reward = Column(Integer, default=50)
+    points = Column(Integer, default=50)
     
     course = relationship("Course", back_populates="modules")
     topics = relationship("Topic", back_populates="module", cascade="all, delete-orphan")
@@ -65,7 +66,7 @@ class Certificate(Base):
     user_id = Column(Integer, ForeignKey('users.id'))
     course_id = Column(Integer, ForeignKey('courses.id'))
     issued_at = Column(DateTime(timezone=True), server_default=func.now())
-    certificate_url = Column(String)
+    certificate_code = Column(String, unique=True, index=True)
 
 class Achievement(Base):
     __tablename__ = 'achievements'
@@ -75,3 +76,13 @@ class Achievement(Base):
     description = Column(String)
     icon = Column(String)
     unlocked_at = Column(DateTime(timezone=True), server_default=func.now())
+
+class Activity(Base):
+    __tablename__ = "activities"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer)
+    activity_type = Column(String(100))
+    message = Column(Text)
+    related_id = Column(Integer, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)

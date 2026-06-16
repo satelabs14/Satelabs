@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, Text, Boolean, ForeignKey, DateTime
+from sqlalchemy.orm import relationship
 from app.database import Base
-from datetime import datetime
+from datetime import datetime, timezone
 
 class User(Base):
     __tablename__ = "users"
@@ -15,9 +16,11 @@ class User(Base):
     courses_completed = Column(Integer, default=0)
     labs_completed = Column(Integer, default=0)
     points = Column(Integer, default=0)
-    xp = Column(Integer, default=0)
     rank = Column(String(50), default="Recruit")
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+
+    activities = relationship("Activity", back_populates="user")
+    certificates = relationship("Certificate", back_populates="user")
 
 class Course(Base):
     __tablename__ = "courses"
@@ -27,6 +30,8 @@ class Course(Base):
     description = Column(Text)
     points = Column(Integer, default=10)
 
+    modules = relationship("Module", back_populates="course")
+
 class Module(Base):
     __tablename__ = "modules"
 
@@ -35,6 +40,8 @@ class Module(Base):
     title = Column(String(255), nullable=False)
     content = Column(Text, nullable=False)
     points = Column(Integer, default=10)
+
+    course = relationship("Course", back_populates="modules")
 
 class ModuleProgress(Base):
     __tablename__ = "module_progress"
@@ -92,4 +99,18 @@ class Certificate(Base):
     course_id = Column(Integer, ForeignKey("courses.id"))
 
     certificate_code = Column(String, unique=True)
-    issued_at = Column(DateTime, default=datetime.utcnow)
+    issued_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+
+    user = relationship("User", back_populates="certificates")
+
+class Activity(Base):
+    __tablename__ = "activities"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    activity_type = Column(String(50), nullable=False)
+    message = Column(String(255), nullable=False)
+    timestamp = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    related_id = Column(Integer, nullable=True) # e.g., module_id or course_id
+
+    user = relationship("User", back_populates="activities")

@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 
 from app import models, schemas
 from app.dependencies import get_db, get_current_user
+from app.utils import calculate_rank
 
 router = APIRouter(
     prefix="/labs",
@@ -102,11 +103,13 @@ def complete_lab(
 
     current_user.labs_completed += 1
     current_user.points += lab.points
+    current_user.rank = calculate_rank(current_user.points)
 
     db.commit()
 
     return {
         "message": "Lab completed successfully",
         "points_earned": lab.points,
-        "total_points": current_user.points
+        "total_points": current_user.points,
+        "new_rank": current_user.rank
     }

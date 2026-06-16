@@ -7,9 +7,10 @@ import Dashboard from './pages/Dashboard';
 import CoursesPage from './pages/CoursesPage';
 import LabsPage from './pages/LabsPage';
 import QuizPage from './pages/QuizPage';
-import CertificatesPage from './pages/CertificatesPage';
+import Certificates from './pages/Certificates';
 import LeaderboardPage from './pages/LeaderboardPage';
 import ProfilePage from './pages/ProfilePage';
+import VerifyCertificate from './pages/VerifyCertificate';
 
 export default function App() {
   return (
@@ -26,9 +27,10 @@ export default function App() {
             <Route path="/courses" element={<CoursesPage />} />
             <Route path="/labs" element={<LabsPage />} />
             <Route path="/quiz" element={<QuizPage />} />
-            <Route path="/certificates" element={<CertificatesPage />} />
+            <Route path="/certificates" element={<Certificates />} />
             <Route path="/leaderboard" element={<LeaderboardPage />} />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/verify/:code" element={<VerifyCertificate />} />
           </Route>
 
           {/* Default redirect */}

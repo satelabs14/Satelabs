@@ -34,6 +34,14 @@ def update_profile(
     if data.bio:
         current_user.bio = data.bio
 
+    # Activity Logging
+    activity = models.Activity(
+        user_id=current_user.id,
+        activity_type="PROFILE_UPDATE",
+        message="Updated profile information"
+    )
+    db.add(activity)
+
     db.commit()
     db.refresh(current_user)
 
@@ -63,6 +71,14 @@ async def upload_profile_image(
         # Update user profile image
         relative_path = f"uploads/profiles/{unique_filename}"
         current_user.profile_image = relative_path
+
+        # Activity Logging
+        activity = models.Activity(
+            user_id=current_user.id,
+            activity_type="PROFILE_UPDATE",
+            message="Updated profile image"
+        )
+        db.add(activity)
         db.commit()
         db.refresh(current_user)
         

@@ -15,7 +15,9 @@ export default function QuizPage() {
   const [quizLoading, setQuizLoading] = useState(false);
 
   useEffect(() => {
-    axios.get(`${API_BASE}/quiz`).then(res => {
+    axios.get(`${API_BASE}/quiz`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem('satelabs_token')}` }
+    }).then(res => {
       setQuizzes(res.data || []);
     }).finally(() => setLoading(false));
   }, []);
@@ -23,7 +25,9 @@ export default function QuizPage() {
   const startQuiz = async (quiz) => {
     setQuizLoading(true);
     try {
-      const res = await axios.get(`${API_BASE}/quiz/${quiz.id}/questions`);
+      const res = await axios.get(`${API_BASE}/quiz/${quiz.id}/questions`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('satelabs_token')}` }
+      });
       setQuestions(res.data || []);
       setActiveQuiz(quiz);
       setCurrent(0);
@@ -52,7 +56,9 @@ export default function QuizPage() {
     } else {
       // Submit quiz
       try {
-        const res = await axios.post(`${API_BASE}/quiz/${activeQuiz.id}/submit`, { answers });
+        const res = await axios.post(`${API_BASE}/quiz/${activeQuiz.id}/submit`, { answers }, {
+          headers: { Authorization: `Bearer ${localStorage.getItem('satelabs_token')}` }
+        });
         setResult(res.data);
       } catch {
         setResult({ score: 0, total: questions.length, passed: false });

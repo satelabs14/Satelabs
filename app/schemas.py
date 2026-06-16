@@ -1,5 +1,5 @@
 from pydantic import BaseModel, EmailStr
-from typing import Optional
+from typing import Optional, List
 from datetime import datetime
 
 # ── Auth schemas ──────────────────────────────────────────────────────────────
@@ -33,7 +33,6 @@ class UserOut(BaseModel):
     bio: Optional[str] = None
     profile_image: Optional[str] = None
     points: int = 0
-    xp: int = 0
     rank: str = "Recruit"
     courses_completed: int = 0
     labs_completed: int = 0
@@ -51,7 +50,6 @@ class AdminUserOut(BaseModel):
     bio: Optional[str] = None
     profile_image: Optional[str] = None
     points: int = 0
-    xp: int = 0
     rank: str = "Recruit"
     courses_completed: int = 0
     labs_completed: int = 0
@@ -167,6 +165,7 @@ class CourseWithProgress(BaseModel):
     completed_modules: int = 0
     progress_percentage: int = 0
     modules: list[ModuleOut] = []
+    is_enrolled: bool = False
 
     class Config:
         from_attributes = True
@@ -175,27 +174,44 @@ class CourseWithProgress(BaseModel):
 class LeaderboardEntry(BaseModel):
     rank: int
     username: str
-    xp: int
+    points: int
     user_rank: str
+    profile_image: Optional[str] = None
 
     class Config:
         from_attributes = True
 
+class RankProgressOut(BaseModel):
+    current_rank: str
+    next_rank: Optional[str]
+    points_to_next_rank: Optional[int]
+    progress_percentage: float
+
+
+class ActivityOut(BaseModel):
+    id: int
+    message: str
+    timestamp: datetime
+    activity_type: str
+    class Config:
+        from_attributes = True
 
 class DashboardStats(BaseModel):
-    current_xp: int
-    current_rank: str
+    points: int
+    rank: str
     completed_modules: int
     active_courses: int
     completed_courses: int
     completed_labs: int
     certificates_earned: int
-    courses: list[CourseWithProgress] = []
+    leaderboard_position: int
+    overall_progress: int = 0
+    courses: List[CourseWithProgress] = []
 
 
 class ModuleCompletionResponse(BaseModel):
     message: str
-    xp_earned: int
-    new_xp_total: int
+    points_earned: int
+    new_points_total: int
     new_rank: str
     progress_percentage: int

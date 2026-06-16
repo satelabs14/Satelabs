@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { API_BASE } from '../context/AuthContext';
+import { API_BASE } from '../../context/AuthContext';
 
 const glassStyle = {
   background: 'rgba(30, 41, 59, 0.7)',
@@ -20,7 +20,11 @@ export default function Courses() {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const res = await axios.get(`${API_BASE}/courses`);
+        const res = await axios.get(`${API_BASE}/courses`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('satelabs_token')}`
+          }
+        });
         setCourses(res.data);
       } catch (err) {
         console.error("Failed to fetch courses", err);
@@ -74,7 +78,7 @@ export default function Courses() {
               <span style={{ background: 'rgba(249, 115, 22, 0.15)', color: '#f97316', padding: '0.25rem 0.75rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase' }}>
                 {course.level}
               </span>
-              <span style={{ color: '#06b6d4', fontWeight: 'bold', fontSize: '0.9rem' }}>{course.total_xp} XP</span>
+              <span style={{ color: '#06b6d4', fontWeight: 'bold', fontSize: '0.9rem' }}>{course.points} XP</span>
             </div>
             
             <h2 style={{ fontSize: '1.25rem', color: '#fff', margin: '0 0 1rem 0', lineHeight: '1.4' }}>{course.title}</h2>

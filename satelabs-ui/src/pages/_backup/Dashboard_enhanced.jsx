@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { useAuth } from '../context/AuthContext';
-import { API_BASE } from '../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
+import { API_BASE } from '../../context/AuthContext';
 import './Dashboard.css';
 
 const StatCard = ({ label, value, icon, accent, sub }) => (
@@ -86,14 +86,14 @@ export default function Dashboard() {
   const statItems = [
     { 
       label: 'Current XP', 
-      value: stats?.current_xp || 0, 
+      value: stats?.points || 0, 
       icon: '⚡', 
       accent: 'cyan',
       sub: 'experience points'
     },
     { 
       label: 'Your Rank', 
-      value: stats?.current_rank || 'Recruit', 
+      value: stats?.rank || 'Recruit', 
       icon: '👑', 
       accent: 'amber',
       sub: 'current rank'
@@ -127,19 +127,19 @@ export default function Dashboard() {
       <div className="xp-banner">
         <div className="xp-content">
           <div className="xp-left">
-            <h2 className="xp-value mono">{stats?.current_xp || 0}</h2>
+            <h2 className="xp-value mono">{stats?.points || 0}</h2>
             <p className="xp-label">Experience Points</p>
           </div>
           <div className="xp-divider"></div>
           <div className="xp-right">
-            <h2 className="rank-value">{stats?.current_rank || 'Recruit'}</h2>
+            <h2 className="rank-value">{stats?.rank || 'Recruit'}</h2>
             <p className="rank-label">Current Rank</p>
             <div className="rank-info">
-              {stats?.current_rank === 'Recruit' && <span>Next: Analyst (101 XP)</span>}
-              {stats?.current_rank === 'Analyst' && <span>Next: Hunter (301 XP)</span>}
-              {stats?.current_rank === 'Hunter' && <span>Next: Specialist (701 XP)</span>}
-              {stats?.current_rank === 'Specialist' && <span>Next: Elite (1501 XP)</span>}
-              {stats?.current_rank === 'Elite' && <span>🌟 Maximum Rank Achieved!</span>}
+              {stats?.rank === 'Recruit' && <span>Next: Analyst (101 XP)</span>}
+              {stats?.rank === 'Analyst' && <span>Next: Hunter (301 XP)</span>}
+              {stats?.rank === 'Hunter' && <span>Next: Specialist (701 XP)</span>}
+              {stats?.rank === 'Specialist' && <span>Next: Elite (1501 XP)</span>}
+              {stats?.rank === 'Elite' && <span>🌟 Maximum Rank Achieved!</span>}
             </div>
           </div>
         </div>
@@ -175,23 +175,23 @@ export default function Dashboard() {
         <div className="summary-card">
           <h3>Rank Progression</h3>
           <div className="rank-bars">
-            <div className="rank-item" style={{opacity: stats?.current_rank === 'Recruit' || ['Analyst', 'Hunter', 'Specialist', 'Elite'].includes(stats?.current_rank) ? 1 : 0.3}}>
+            <div className="rank-item" style={{opacity: stats?.rank === 'Recruit' || ['Analyst', 'Hunter', 'Specialist', 'Elite'].includes(stats?.rank) ? 1 : 0.3}}>
               <span>Recruit</span>
               <span className="rank-range">0-100</span>
             </div>
-            <div className="rank-item" style={{opacity: ['Analyst', 'Hunter', 'Specialist', 'Elite'].includes(stats?.current_rank) ? 1 : 0.3}}>
+            <div className="rank-item" style={{opacity: ['Analyst', 'Hunter', 'Specialist', 'Elite'].includes(stats?.rank) ? 1 : 0.3}}>
               <span>Analyst</span>
               <span className="rank-range">101-300</span>
             </div>
-            <div className="rank-item" style={{opacity: ['Hunter', 'Specialist', 'Elite'].includes(stats?.current_rank) ? 1 : 0.3}}>
+            <div className="rank-item" style={{opacity: ['Hunter', 'Specialist', 'Elite'].includes(stats?.rank) ? 1 : 0.3}}>
               <span>Hunter</span>
               <span className="rank-range">301-700</span>
             </div>
-            <div className="rank-item" style={{opacity: ['Specialist', 'Elite'].includes(stats?.current_rank) ? 1 : 0.3}}>
+            <div className="rank-item" style={{opacity: ['Specialist', 'Elite'].includes(stats?.rank) ? 1 : 0.3}}>
               <span>Specialist</span>
               <span className="rank-range">701-1500</span>
             </div>
-            <div className="rank-item" style={{opacity: stats?.current_rank === 'Elite' ? 1 : 0.3}}>
+            <div className="rank-item" style={{opacity: stats?.rank === 'Elite' ? 1 : 0.3}}>
               <span>Elite</span>
               <span className="rank-range">1501+</span>
             </div>

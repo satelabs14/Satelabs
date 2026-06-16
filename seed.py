@@ -18,7 +18,7 @@ def seed_courses():
             "title": "Cyber Security Foundation",
             "description": "Establish a strong foundational knowledge of modern cybersecurity principles, threats, and defensive strategies.",
             "level": "Initiate",
-            "total_xp": 500,
+            "points": 500,
             "modules": [
                 {"title": "Introduction to InfoSec", "topics": ["CIA Triad", "Threat Actors", "Basic Terminology"]},
                 {"title": "Networking Basics", "topics": ["OSI Model", "TCP/IP Suite", "Common Ports"]},
@@ -29,7 +29,7 @@ def seed_courses():
             "title": "Ethical Hacking Associate",
             "description": "Learn the methodology of ethical hacking, scanning, enumeration, and basic exploitation techniques.",
             "level": "Explorer",
-            "total_xp": 800,
+            "points": 800,
             "modules": [
                 {"title": "Reconnaissance & Footprinting", "topics": ["OSINT", "DNS Enumeration", "Search Engine Dorks"]},
                 {"title": "Scanning Networks", "topics": ["Nmap Mastery", "Vulnerability Scanning", "Network Mapping"]},
@@ -40,7 +40,7 @@ def seed_courses():
             "title": "Cyber Security Professional Level 1",
             "description": "Advanced defensive techniques, incident response fundamentals, and robust network architecture.",
             "level": "Operator",
-            "total_xp": 1200,
+            "points": 1200,
             "modules": [
                 {"title": "Security Architecture", "topics": ["Zero Trust", "Firewall Configurations", "IDS/IPS"]},
                 {"title": "Incident Response (IR)", "topics": ["IR Lifecycle", "Digital Forensics Basics", "Chain of Custody"]},
@@ -51,7 +51,7 @@ def seed_courses():
             "title": "Cyber Security Professional Level 2",
             "description": "Expert-level penetration testing, advanced forensics, and enterprise security management.",
             "level": "Sentinel",
-            "total_xp": 2000,
+            "points": 2000,
             "modules": [
                 {"title": "Advanced Exploitation", "topics": ["Buffer Overflows", "Return Oriented Programming", "Custom Payloads"]},
                 {"title": "Web Application Security", "topics": ["OWASP Top 10 Deep Dive", "SQLi & XSS", "API Security Testing"]},
@@ -62,7 +62,7 @@ def seed_courses():
             "title": "Artificial Intelligence for Cyber Security",
             "description": "Leverage machine learning models to detect anomalies, automate responses, and combat AI-driven threats.",
             "level": "Vanguard",
-            "total_xp": 1500,
+            "points": 1500,
             "modules": [
                 {"title": "AI in Threat Detection", "topics": ["Anomaly Detection Algorithms", "Log Analysis with ML", "Behavioral Analytics"]},
                 {"title": "Offensive AI", "topics": ["Deepfakes in Social Engineering", "Automated Fuzzing", "Adversarial Machine Learning"]},
@@ -76,7 +76,7 @@ def seed_courses():
             title=c_data["title"],
             description=c_data["description"],
             level=c_data["level"],
-            total_xp=c_data["total_xp"],
+            points=c_data["points"],
             image_url="/assets/course-placeholder.jpg"
         )
         db.add(course)
@@ -89,7 +89,7 @@ def seed_courses():
                 title=m_data["title"],
                 description=f"Learn about {m_data['title']}",
                 order=m_idx + 1,
-                xp_reward=150
+                points=150
             )
             db.add(module)
             db.commit()

@@ -94,6 +94,7 @@ export default function CoursesPage() {
           Authorization: `Bearer ${localStorage.getItem('satelabs_token')}`
         }
       });
+      console.log("COURSES API:", res.data);
       setCourses(res.data);
     } catch (err) {
       console.error('Failed to load courses:', err);
@@ -120,7 +121,7 @@ export default function CoursesPage() {
       await fetchCurrentUser();
 
       // Show success message
-      alert(`🎉 +${res.data.xp_earned} XP earned! New rank: ${res.data.new_rank}`);
+      alert(`🎉 +${res.data.points_earned} XP earned! New rank: ${res.data.new_rank}`);
 
       // If course is complete, show certificate message
       if (res.data.progress_percentage === 100) {

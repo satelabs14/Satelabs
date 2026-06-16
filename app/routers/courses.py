@@ -13,7 +13,7 @@ router = APIRouter(
 
 
 # ── List all courses ──────────────────────────────────────────────────────────
-@router.get("/", response_model=list[schemas.CourseWithProgress])
+@router.get("", response_model=list[schemas.CourseWithProgress])
 def get_courses(
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user)
@@ -128,7 +128,7 @@ def complete_module(
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user)
 ):
-    """Mark a module as completed and award XP."""
+    """Mark a module as completed and award points."""
     
     # Verify module exists
     module = db.query(models.Module).filter(models.Module.id == module_id).first()
@@ -158,12 +158,12 @@ def complete_module(
         )
         db.add(progress)
     
-    # Award XP
-    xp_earned = module.points
-    current_user.xp += xp_earned
+    # Award points
+    points_earned = module.points
+    current_user.points += points_earned
     
     # Update rank
-    new_rank = calculate_rank(current_user.xp)
+    new_rank = calculate_rank(current_user.points)
     current_user.rank = new_rank
     
     # Update course progress
@@ -220,15 +220,15 @@ def complete_module(
     
     return schemas.ModuleCompletionResponse(
         message="Module completed successfully",
-        xp_earned=xp_earned,
-        new_xp_total=current_user.xp,
+        points_earned=points_earned,
+        new_points_total=current_user.points,
         new_rank=current_user.rank,
         progress_percentage=int(progress_percentage)
     )
 
 
 # ── Create course (admin only) ────────────────────────────────────────────────
-@router.post("/", response_model=schemas.CourseWithProgress, status_code=201)
+@router.post("", response_model=schemas.CourseWithProgress, status_code=201)
 def create_course(
     course: schemas.CourseCreate,
     db: Session = Depends(get_db),

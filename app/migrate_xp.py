@@ -8,15 +8,20 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 
 with engine.connect() as conn:
-    try:
-        conn.execute(text('ALTER TABLE users ADD COLUMN xp INTEGER DEFAULT 0'))
+    existing_columns = {
+        row[1] for row in conn.execute(text("PRAGMA table_info(users)")).fetchall()
+    }
+
+    if "points" not in existing_columns:
+        conn.execute(text("ALTER TABLE users ADD COLUMN points INTEGER DEFAULT 0"))
         conn.commit()
-        print("✓ Added xp column")
-    except Exception as e:
-        if "duplicate column" in str(e).lower():
-            print("✓ xp column already exists")
-        else:
-            print(f"Error adding xp: {e}")
-    
-    # Note: created_at requires special handling, skip for now
-    print("Migration completed!")
+        print("Added points column")
+    else:
+        print("points column already exists")
+
+    if "xp" in existing_columns:
+        conn.execute(text("UPDATE users SET points = COALESCE(xp, 0) WHERE COALESCE(points, 0) = 0 AND COALESCE(xp, 0) > 0"))
+        conn.commit()
+        print("Copied legacy xp values into empty points rows. Review, then drop the legacy xp column manually if appropriate.")
+
+    print("Points migration completed!")

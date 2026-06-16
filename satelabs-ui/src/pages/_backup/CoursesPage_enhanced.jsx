@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useAuth } from '../context/AuthContext';
-import { API_BASE } from '../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
+import { API_BASE } from '../../context/AuthContext';
 import './Courses.css';
 
 const CourseCard = ({ course, onViewDetails }) => (
@@ -117,7 +117,7 @@ const CourseDetailsView = ({ courseId, onBack }) => {
 
       setMessage({
         type: 'success',
-        text: `Completed! +${res.data.xp_earned} XP earned`
+        text: `Completed! +${res.data.points_earned} XP earned`
       });
 
       await fetchCurrentUser();
