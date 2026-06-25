@@ -74,14 +74,52 @@ class Quiz(Base):
     __tablename__ = "quizzes"
 
     id = Column(Integer, primary_key=True, index=True)
+
     module_id = Column(Integer, nullable=False)
+
+    title = Column(String, nullable=False)
+
+    description = Column(Text)
+
+    points = Column(Integer, default=100)
+
+    passing_score = Column(Integer, default=70)
+
+class QuizQuestion(Base):
+    __tablename__ = "quiz_questions"
+
+    id = Column(Integer, primary_key=True, index=True)
+
+    quiz_id = Column(
+        Integer,
+        ForeignKey("quizzes.id")
+    )
+
     question = Column(Text, nullable=False)
+
     option_a = Column(String, nullable=False)
+
     option_b = Column(String, nullable=False)
+
     option_c = Column(String, nullable=False)
+
     option_d = Column(String, nullable=False)
-    correct_answer = Column(String, nullable=False)
-    points = Column(Integer, default=5)
+
+    correct_answer = Column(
+        String,
+        nullable=False
+    )
+
+class QuizProgress(Base):
+    __tablename__ = "quiz_progress"
+
+    id = Column(Integer, primary_key=True)
+
+    user_id = Column(Integer, ForeignKey("users.id"))
+    quiz_id = Column(Integer, ForeignKey("quizzes.id"))
+
+    score = Column(Integer)
+    passed = Column(Boolean)
 
 class LabProgress(Base):
     __tablename__ = "lab_progress"

@@ -83,31 +83,69 @@ class ModuleCreate(BaseModel):
 
 class QuizCreate(BaseModel):
     module_id: int
+
+    title: str
+
+    description: str | None = None
+
+    points: int = 100
+
+    passing_score: int = 70
+
+class QuizQuestionCreate(BaseModel):
+
+    quiz_id: int
+
     question: str
+
     option_a: str
+
     option_b: str
+
     option_c: str
+
     option_d: str
+
     correct_answer: str
-    points: int = 5
 
 
 class QuizOut(BaseModel):
+
     id: int
+
     module_id: int
-    question: str
-    option_a: str
-    option_b: str
-    option_c: str
-    option_d: str
+
+    title: str
+
+    description: str | None = None
+
     points: int
+
+    passing_score: int
 
     class Config:
         from_attributes = True
 
 
-class QuizSubmit(BaseModel):
+class QuizAnswer(BaseModel):
+    question_id: int
     answer: str
+
+class QuizSubmit(BaseModel):
+    answers: list[QuizAnswer]
+
+class QuizQuestionOut(BaseModel):
+    id: int
+    quiz_id: int
+    question: str
+
+    option_a: str
+    option_b: str
+    option_c: str
+    option_d: str
+
+    class Config:
+        from_attributes = True
 
 class LabCreate(BaseModel):
     title: str
@@ -117,12 +155,15 @@ class LabCreate(BaseModel):
     module_id: int
 
 class LabOut(BaseModel):
+
     id: int
     title: str
     description: str
     difficulty: str
     points: int
     module_id: int
+
+    is_completed: bool = False
 
     class Config:
         from_attributes = True

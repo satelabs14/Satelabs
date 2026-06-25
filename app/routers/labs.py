@@ -11,9 +11,37 @@ router = APIRouter(
 )
 
 
-@router.get("/", response_model=list[schemas.LabOut])
-def get_labs(db: Session = Depends(get_db)):
-    return db.query(models.Lab).all()
+@router.get("/")
+def get_labs(
+    current_user: models.User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+
+    labs = db.query(models.Lab).all()
+
+    result = []
+
+    for lab in labs:
+
+        progress = db.query(
+            models.LabProgress
+        ).filter(
+            models.LabProgress.user_id == current_user.id,
+            models.LabProgress.lab_id == lab.id,
+            models.LabProgress.completed == True
+        ).first()
+
+        result.append({
+            "id": lab.id,
+            "title": lab.title,
+            "description": lab.description,
+            "difficulty": lab.difficulty,
+            "points": lab.points,
+            "module_id": lab.module_id,
+            "is_completed": progress is not None
+        })
+
+    return result
 
 
 @router.post("/", response_model=schemas.LabOut)

@@ -1,4 +1,4 @@
-.quiz-page {}
+
 
 .quiz-list {
   display: flex;
@@ -305,3 +305,19 @@
 }
 
 .result-btn { width: 100%; }
+
+.review-section{
+  margin-top:20px;
+}
+
+.review-card{
+  padding:15px;
+  margin-bottom:12px;
+  border:1px solid #243b55;
+  border-radius:10px;
+  background:#0f172a;
+}
+
+.option-btn.selected{
+  border:2px solid #f59e0b;
+}

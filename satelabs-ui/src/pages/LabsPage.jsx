@@ -13,28 +13,57 @@ const LabCard = ({ lab, onComplete }) => {
     if (!flagInput.trim()) return;
     setSubmitting(true);
     try {
-      await axios.post(`${API_BASE}/labs/${lab.id}/complete`, { flag: flagInput }, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('satelabs_token')}`
-        }
-      });
-      setResult('success');
-      onComplete(lab.id);
-    } catch (err) {
-      setResult(err.response?.data?.detail === 'Incorrect flag' ? 'wrong' : 'error');
-    } finally {
-      setSubmitting(false);
+  const res = await axios.post(
+  `${API_BASE}/labs/${lab.id}/complete`,
+  {},
+  {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('satelabs_token')}`
     }
+  }
+);
+
+  setResult('success');
+
+  // Dashboard refresh
+  window.dispatchEvent(
+    new Event('satelabs:progress-updated')
+  );
+
+  // Optional success popup
+  if (res.data?.points_earned) {
+    alert(`🎉 +${res.data.points_earned} Points Earned`);
+  }
+
+  onComplete(lab.id);
+
+} catch (err) {
+
+  if (
+    err.response?.data?.detail ===
+    "Lab already completed"
+  ) {
+
+    setResult("success");
+
+    onComplete(lab.id);
+
+  } else {
+
+    setResult("error");
+
+  }
+}
   };
 
   const typeColor = { Web: 'cyan', Network: 'amber', Forensics: 'purple', Crypto: 'green', Misc: 'muted' };
-  const color = typeColor[lab.type] || 'cyan';
+  const color = 'cyan';
 
   return (
     <div className={`lab-card ${lab.is_completed ? 'lab-done' : ''}`}>
       <div className="lab-header">
         <div className="lab-badges">
-          <span className={`lab-type type-${color}`}>{lab.type || 'Lab'}</span>
+          <span className={`lab-type type-${color}`}>Lab</span>
           <span className={`lab-diff ${lab.difficulty?.toLowerCase()}`}>{lab.difficulty || 'Easy'}</span>
         </div>
         <span className="lab-points mono">+{lab.points || 50} pts</span>
@@ -42,12 +71,6 @@ const LabCard = ({ lab, onComplete }) => {
 
       <h3 className="lab-title">{lab.title}</h3>
       <p className="lab-desc">{lab.description || 'Complete this challenge to earn points.'}</p>
-
-      {lab.hints?.length > 0 && (
-        <div className="lab-hints">
-          <p className="hint-label">Hints available: {lab.hints.length}</p>
-        </div>
-      )}
 
       {lab.is_completed ? (
         <div className="lab-completed">
@@ -59,7 +82,7 @@ const LabCard = ({ lab, onComplete }) => {
             className="btn-flag-toggle"
             onClick={() => setShowFlag(!showFlag)}
           >
-            {showFlag ? 'Cancel' : '⚑ Submit Flag'}
+            {showFlag ? 'Cancel' : 'Complete Lab'}
           </button>
 
           {showFlag && (
@@ -92,9 +115,9 @@ const LabCard = ({ lab, onComplete }) => {
 export default function LabsPage() {
   const [labs, setLabs] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState('All');
+  //const [filter, setFilter] = useState('All');
 
-  const types = ['All', 'Web', 'Network', 'Forensics', 'Crypto', 'Misc'];
+  //const types = ['All', 'Web', 'Network', 'Forensics', 'Crypto', 'Misc'];
 
   useEffect(() => {
     axios.get(`${API_BASE}/labs`, {
@@ -108,8 +131,11 @@ export default function LabsPage() {
     setLabs(prev => prev.map(l => l.id === labId ? { ...l, is_completed: true } : l));
   };
 
-  const filtered = filter === 'All' ? labs : labs.filter(l => l.type === filter);
-  const completedCount = labs.filter(l => l.is_completed).length;
+//const filtered = filter === 'All' ? labs : labs.filter(l => l.type === filter);
+  const filtered = labs;
+  const completedCount = labs.filter(
+  lab => lab.is_completed
+).length;
 
   return (
     <div className="page labs-page">
@@ -132,19 +158,6 @@ export default function LabsPage() {
         <span className="mono" style={{ fontSize: 12, color: 'var(--text-muted)', flexShrink: 0 }}>
           {labs.length ? Math.round((completedCount / labs.length) * 100) : 0}% done
         </span>
-      </div>
-
-      {/* Type filters */}
-      <div className="filter-pills" style={{ marginBottom: 24, flexWrap: 'wrap' }}>
-        {types.map(t => (
-          <button
-            key={t}
-            className={`filter-pill ${filter === t ? 'active' : ''}`}
-            onClick={() => setFilter(t)}
-          >
-            {t}
-          </button>
-        ))}
       </div>
 
       {loading ? (

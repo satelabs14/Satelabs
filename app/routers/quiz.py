@@ -31,47 +31,149 @@ def get_all_quizzes(
 ):
     return db.query(models.Quiz).all()
 
-@router.get("/{module_id}")
-def get_quizzes(
-    module_id: int,
+@router.get(
+    "/{quiz_id}/questions",
+    response_model=list[schemas.QuizQuestionOut]
+)
+def get_questions(
+    quiz_id: int,
     db: Session = Depends(get_db)
 ):
-    return db.query(models.Quiz).filter(
-        models.Quiz.module_id == module_id
+    return db.query(
+        models.QuizQuestion
+    ).filter(
+        models.QuizQuestion.quiz_id == quiz_id
     ).all()
 
 @router.post("/{quiz_id}/submit")
 def submit_quiz(
-    quiz_id: int, 
-    payload: schemas.QuizSubmit, 
-    current_user: models.User = Depends(get_current_user), 
+    quiz_id: int,
+    payload: schemas.QuizSubmit,
+    current_user: models.User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    # 1. Quiz question tracking
-    quiz = db.query(models.Quiz).filter(models.Quiz.id == quiz_id).first()
-    if not quiz:
-        raise HTTPException(status_code=404, detail="Quiz not found")
-        
-    # 2. String comparison using strip() and lower() to avoid formatting mismatch
-    user_answer = payload.answer.strip().lower()
-    correct_db_answer = quiz.correct_answer.strip().lower()
-    
-    if user_answer == correct_db_answer:
-        # Fetch fresh user instance from db context
-        user = db.query(models.User).filter(models.User.id == current_user.id).first()
-        user.points += quiz.points
-        user.rank = calculate_rank(user.points)
-        db.commit()
-        
-        return {
-            "correct": True, 
-            "points_earned": quiz.points, 
-            "total_points": user.points,
-            "new_rank": user.rank
-        }
-        
+
+    score = 0
+    total = len(payload.answers)
+
+    review = []
+
+    for item in payload.answers:
+
+        question = db.query(
+            models.QuizQuestion
+        ).filter(
+            models.QuizQuestion.id == item.question_id
+        ).first()
+
+        if not question:
+            continue
+
+        is_correct = (
+            item.answer.lower().strip()
+            ==
+            question.correct_answer.lower().strip()
+        )
+
+        review.append({
+            "question": question.question,
+            "your_answer": item.answer,
+            "correct_answer": question.correct_answer,
+            "is_correct": is_correct
+        })
+
+        if is_correct:
+            score += 1
+
+    percentage = (score / total) * 100 if total > 0 else 0
+
+    passed = percentage >= 70
+
+    points_earned = 0
+
+    existing_progress = db.query(
+        models.QuizProgress
+    ).filter(
+        models.QuizProgress.user_id == current_user.id,
+        models.QuizProgress.quiz_id == quiz_id
+    ).first()
+
+    first_attempt = existing_progress is None
+
+    if passed and first_attempt:
+
+        quiz = db.query(
+            models.Quiz
+        ).filter(
+            models.Quiz.id == quiz_id
+        ).first()
+
+        if quiz:
+
+            points_earned = quiz.points
+
+            current_user.points += points_earned
+
+            current_user.rank = calculate_rank(
+                current_user.points
+            )
+
+    if first_attempt:
+
+        progress = models.QuizProgress(
+            user_id=current_user.id,
+            quiz_id=quiz_id,
+            score=score,
+            passed=passed
+        )
+
+        db.add(progress)
+
+    else:
+
+        existing_progress.score = score
+        existing_progress.passed = passed
+
+    db.commit()
+
     return {
-        "correct": False, 
-        "points_earned": 0,
-        "hint": f"Your answer: '{payload.answer}', did not match."  # Debugging help
+        "score": score,
+        "total": total,
+        "passed": passed,
+        "points_earned": points_earned,
+        "total_points": current_user.points,
+        "review": review,
+        "first_attempt": first_attempt
     }
+
+@router.post("/question")
+def create_question(
+    question: schemas.QuizQuestionCreate,
+    db: Session = Depends(get_db),
+    admin: models.User = Depends(require_admin)
+):
+
+    new_question = models.QuizQuestion(
+        **question.model_dump()
+    )
+
+    db.add(new_question)
+
+    db.commit()
+
+    db.refresh(new_question)
+
+    return new_question
+
+@router.get("/progress/me")
+def get_quiz_progress(
+    current_user: models.User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    progress = db.query(
+        models.QuizProgress
+    ).filter(
+        models.QuizProgress.user_id == current_user.id
+    ).all()
+
+    return progress

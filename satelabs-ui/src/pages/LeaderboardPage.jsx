@@ -44,7 +44,7 @@ const LeaderboardEntry = ({ entry, isCurrentUser }) => (
 
     <div className="entry-xp">
       <span className="xp-value mono">{entry.points}</span>
-      <span className="xp-label">XP</span>
+      <span className="xp-label">Points</span>
     </div>
   </div>
 );
@@ -94,7 +94,7 @@ export default function LeaderboardPage() {
       <div className="page-header">
         <p className="page-eyebrow">// RANKINGS</p>
         <h1 className="page-title">Leaderboard</h1>
-        <p className="page-subtitle">Global rankings based on XP earned</p>
+        <p className="page-subtitle">Global rankings based on Points earned</p>
       </div>
 
       {/* Top 3 Players */}
@@ -107,7 +107,7 @@ export default function LeaderboardPage() {
                 <div className="podium-rank">2</div>
                 <div className="podium-medal">🥈</div>
                 <h3>{topPlayers[1].username}</h3>
-                <p className="podium-xp">{topPlayers[1].points} XP</p>
+                <p className="podium-xp">{topPlayers[1].points} Points</p>
                 <RankBadge rank={topPlayers[1].user_rank} />
               </div>
             )}
@@ -117,7 +117,7 @@ export default function LeaderboardPage() {
                 <div className="podium-rank">1</div>
                 <div className="podium-medal">🥇</div>
                 <h3>{topPlayers[0].username}</h3>
-                <p className="podium-xp">{topPlayers[0].points} XP</p>
+                <p className="podium-xp">{topPlayers[0].points} Points</p>
                 <RankBadge rank={topPlayers[0].user_rank} />
               </div>
             )}
@@ -127,7 +127,7 @@ export default function LeaderboardPage() {
                 <div className="podium-rank">3</div>
                 <div className="podium-medal">🥉</div>
                 <h3>{topPlayers[2].username}</h3>
-                <p className="podium-xp">{topPlayers[2].points} XP</p>
+                <p className="podium-xp">{topPlayers[2].points} Points</p>
                 <RankBadge rank={topPlayers[2].user_rank} />
               </div>
             )}
@@ -148,7 +148,7 @@ export default function LeaderboardPage() {
               </div>
               <div className="your-rank-xp">
                 <span className="xp-value mono">{userRank.points}</span>
-                <span className="xp-label">XP</span>
+                <span className="xp-label">Points</span>
               </div>
             </div>
           </div>

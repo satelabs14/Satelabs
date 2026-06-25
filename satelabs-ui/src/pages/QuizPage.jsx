@@ -13,14 +13,48 @@ export default function QuizPage() {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(true);
   const [quizLoading, setQuizLoading] = useState(false);
+  const [completedQuizzes, setCompletedQuizzes] = useState([]);
 
   useEffect(() => {
-    axios.get(`${API_BASE}/quiz`, {
-      headers: { Authorization: `Bearer ${localStorage.getItem('satelabs_token')}` }
-    }).then(res => {
-      setQuizzes(res.data || []);
-    }).finally(() => setLoading(false));
-  }, []);
+
+  const loadData = async () => {
+
+    const token = localStorage.getItem("satelabs_token");
+
+    try {
+
+      const [quizRes, progressRes] = await Promise.all([
+
+        axios.get(`${API_BASE}/quiz`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }),
+
+        axios.get(`${API_BASE}/quiz/progress/me`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+
+      ]);
+
+      setQuizzes(quizRes.data || []);
+
+      setCompletedQuizzes(
+        progressRes.data.map(item => item.quiz_id)
+      );
+
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  loadData();
+
+}, []);
 
   const startQuiz = async (quiz) => {
     setQuizLoading(true);
@@ -43,11 +77,21 @@ export default function QuizPage() {
   };
 
   const handleAnswer = (option) => {
-    if (selected !== null) return;
-    setSelected(option);
-    const newAnswers = [...answers, { question_id: questions[current]?.id, answer: option }];
-    setAnswers(newAnswers);
-  };
+
+  setSelected(option);
+
+  const filtered = answers.filter(
+    a => a.question_id !== questions[current].id
+  );
+
+  setAnswers([
+    ...filtered,
+    {
+      question_id: questions[current].id,
+      answer: option
+    }
+  ]);
+};
 
   const handleNext = async () => {
     if (current < questions.length - 1) {
@@ -91,7 +135,12 @@ export default function QuizPage() {
             </div>
           ) : (
             <div className="quiz-list">
-              {quizzes.map(quiz => (
+              {quizzes.map(quiz => {
+
+                const completed =
+                  completedQuizzes.includes(quiz.id);
+
+                return (
                 <div key={quiz.id} className="quiz-card">
                   <div className="quiz-card-left">
                     <h3 className="quiz-card-title">{quiz.title}</h3>
@@ -105,14 +154,21 @@ export default function QuizPage() {
                     </div>
                   </div>
                   <button
-                    className={`btn-quiz-start ${quiz.is_completed ? 'completed' : ''}`}
+                    className={
+                      completed
+                        ? "btn-completed"
+                        : "btn-quiz-start"
+                    }
                     onClick={() => startQuiz(quiz)}
                     disabled={quizLoading}
                   >
-                    {quiz.is_completed ? 'Retake' : 'Start Quiz'}
+                    {completed
+                      ? "✓ Completed (Retake Available)"
+                      : "Start Quiz"}
                   </button>
                 </div>
-              ))}
+              );
+              })}
 
               {quizzes.length === 0 && (
                 <div className="courses-empty">
@@ -151,13 +207,74 @@ export default function QuizPage() {
               <span className="mono" style={{ fontSize: 13, color: 'var(--text-secondary)' }}>{pct}%</span>
             </div>
 
-            {result.points_earned && (
-              <p className="result-points">+{result.points_earned} pts earned</p>
+            {result.points_earned > 0 && (
+            <p className="result-points">
+              +{result.points_earned} pts earned
+            </p>
             )}
 
-            <button className="btn-primary result-btn" onClick={exitQuiz}>
-              Back to Quizzes
-            </button>
+            <div className="review-section">
+
+  {result.review?.map((item,index) => (
+
+    <div
+      key={index}
+      className="review-card"
+    >
+
+      <h4>
+        {item.question}
+      </h4>
+
+      <p>
+        Your Answer:
+        <strong>
+          {item.your_answer}
+        </strong>
+      </p>
+
+      <p>
+        Correct Answer:
+        <strong>
+          {item.correct_answer}
+        </strong>
+      </p>
+
+      <p
+        style={{
+          color: item.is_correct
+            ? "#22c55e"
+            : "#ef4444"
+        }}
+      >
+        {item.is_correct
+          ? "✓ Correct"
+          : "✗ Wrong"}
+      </p>
+
+    </div>
+
+  ))}
+
+</div>
+
+            <div className="result-actions">
+
+  <button
+    className="btn-primary result-btn"
+    onClick={() => startQuiz(activeQuiz)}
+  >
+    Retake Quiz
+  </button>
+
+  <button
+    className="btn-outline-sm"
+    onClick={exitQuiz}
+  >
+    Back to Quizzes
+  </button>
+
+</div>
           </div>
         </div>
       ) : (
@@ -184,12 +301,17 @@ export default function QuizPage() {
               <h2 className="question-text">{q.question || q.text}</h2>
 
               <div className="options-list">
-                {(q.options || []).map((opt, i) => {
+                {[
+                  q.option_a,
+                  q.option_b,
+                  q.option_c,
+                  q.option_d
+                ].map((opt, i) =>  {
                   let cls = 'option-btn';
-                  if (selected !== null) {
-                    if (opt === selected) cls += opt === q.correct_answer ? ' correct' : ' wrong';
-                    else if (opt === q.correct_answer) cls += ' correct';
-                  }
+
+                  if (selected === opt) {
+                  cls += ' selected';
+              }
                   return (
                     <button
                       key={i}
